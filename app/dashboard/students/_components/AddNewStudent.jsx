@@ -18,7 +18,6 @@ function AddNewStudent() {
   const [open, setOpen] = useState(false);
   const [grades, setGrades] = useState([]);
 
-
   const {
     register,
     handleSubmit,
@@ -28,12 +27,12 @@ function AddNewStudent() {
 
   useEffect(() => {
     GetAllGradesList();
-  },[])
+  }, []);
   const GetAllGradesList = () => {
-    GlobalApi.GetAllGrades().then(resp=>{
+    GlobalApi.GetAllGrades().then((resp) => {
       setGrades(resp.data);
-    })
-  }
+    });
+  };
 
   const onSubmit = (data) => {
     console.log("FormData", data);
@@ -59,18 +58,24 @@ function AddNewStudent() {
                 <div className="flex flex-col py-2">
                   <label>Select Grade</label>
                   <select
-                    className="p-3 border rounded-lg bg-white "
-                    {...register("grade", { required: true })}>
-                    {grades.map((item,index)=> (
-                      <option key={index} value={item.grade}>{item.grade}</option>
-                    ))}
+                    className="p-3 border rounded-lg bg-white"
+                    {...register("grade", { required: true })}
+                  >
+                    {Array.isArray(grades) && grades.length > 0 ? (
+                      grades.map((item, index) => (
+                        <option key={index} value={item.grade}>
+                          {item.grade}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No grades available</option>
+                    )}
                   </select>
-
                 </div>
                 <div className="py-2">
                   <label>Contact No.</label>
                   <Input
-                  type="number"
+                    type="number"
                     placeholder="Ex. 9876543210"
                     {...register("contact")}
                   />
