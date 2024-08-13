@@ -10,18 +10,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Save } from "lucide-react";
+import { LoaderIcon, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import GlobalApi from "@/app/_services/GlobalApi";
+import { toast } from "sonner";
 
 function AddNewStudent() {
   const [open, setOpen] = useState(false);
   const [grades, setGrades] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -35,7 +38,16 @@ function AddNewStudent() {
   };
 
   const onSubmit = (data) => {
-    console.log("FormData", data);
+    setLoading(true);
+    GlobalApi.CreateNewStudent(data).then((resp) => {
+      console.log("--", resp);
+      if (resp.data) {
+        reset();
+        setOpen(false);
+        toast("New Student Added !");
+      }
+      setLoading(false);
+    });
   };
 
   return (
@@ -88,10 +100,18 @@ function AddNewStudent() {
                   />
                 </div>
                 <div className="flex gap-3 items-center justify-end my-5">
-                  <Button onClick={() => setOpen(false)} variant="ghost">
+                  <Button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    variant="ghost"
+                  >
                     Cancle
                   </Button>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit"
+                    disable= {loading}
+                  >
+                    {loading ? <LoaderIcon className="animate-spin" /> : 'Save'}
+                  </Button>
                 </div>
               </form>
             </DialogDescription>
