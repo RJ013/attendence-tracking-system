@@ -21,7 +21,9 @@ function Student() {
            Students 
            <AddNewStudent/>
         </h2>
-        <StudentListTable studentList={studentList} />
+        <StudentListTable studentList={studentList} 
+        refreshData={GetAllStudents}
+        />
     </div>
   )
 }
